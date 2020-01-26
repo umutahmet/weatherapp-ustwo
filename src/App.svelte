@@ -1,4 +1,15 @@
 <script>
+  import { onMount } from 'svelte'
+  import { getWeatherData } from './helpers'
+
+  let weatherData
+
+  onMount(async () => {
+    weatherData = await getWeatherData()
+
+    console.log(weatherData)
+  })
+
   export let name
 </script>
 

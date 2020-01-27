@@ -1,6 +1,6 @@
 <script>
   import { fade, fly } from 'svelte/transition'
-  import { onMount } from 'svelte'
+  import { createEventDispatcher, onMount } from 'svelte'
 
   const images = [
     'images/cloud-lightning.svg',
@@ -19,12 +19,21 @@
 
   const messages = ['Getting location', 'Contacting weather centre', 'Receiving weather conditions', 'Loading app']
 
-  let visible
+  let current = 0
   let message = messages[0]
+  let show = true
+  const dispatch = createEventDispatcher()
+
+  export let loaded
 
   onMount(() => {
     const imageinterval = setInterval(() => {
-      visible = visible < images.length - 1 ? visible + 1 : 0
+      current = current < images.length - 1 ? current + 1 : 0
+
+      if (loaded && current > 1) {
+        show = false
+        dispatch('ready')
+      }
     }, 1000)
 
     const messageinterval = setInterval(() => {
@@ -36,15 +45,13 @@
       clearInterval(messageinterval)
     }
   })
-
-  export let hide
 </script>
 
-{#if hide === false}
-  <div in:fade|local>
+{#if show}
+  <div class="container" transition:fade|local>
     <div class="images">
       {#each images as src, i}
-        {#if visible === i}
+        {#if current === i}
           <img {src} alt="" in:fly={{ x: 20 }} out:fly={{ x: -20 }} />
         {/if}
       {/each}
@@ -54,6 +61,9 @@
 {/if}
 
 <style>
+  .container {
+    position: relative;
+  }
   .images {
     height: 100vh;
     display: flex;
@@ -69,5 +79,11 @@
     bottom: 15%;
     width: 100%;
     text-align: center;
+    font-size: 1.5rem;
   }
+  /*.block {
+    width: 100vw;
+    height: 100vh;
+    background: #6fadcd;
+  }*/
 </style>

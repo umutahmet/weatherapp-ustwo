@@ -50,31 +50,35 @@ const convertMPSToKMH = val => {
   return Math.round(kmh)
 }
 
-const formatWeatherData = data => ({
-  raw: data,
-  icon: data.weather[0].icon,
-  description: data.weather[0].main,
-  location: data.name,
+const formatWeatherData = ({ name, main, weather, wind }) => ({
+  icon: weather[0].icon,
+  description: weather[0].main,
+  location: name,
   temp: {
-    c: convertKelvinToCelsius(data.main.temp),
-    f: convertKelvinToFahrenheit(data.main.temp),
+    c: convertKelvinToCelsius(main.temp),
+    f: convertKelvinToFahrenheit(main.temp),
   },
   wind: {
-    direction: getCardinalDirection(data.wind.deg),
-    speed: convertMPSToKMH(data.wind.speed),
+    direction: getCardinalDirection(wind.deg),
+    speed: convertMPSToKMH(wind.speed),
   },
+  humidity: main.humidity,
+  pressure: main.pressure,
 })
 
-const getErrorMessage = error => {
-  if (error.message && error.message === 'User denied Geolocation') {
-    return "It looks like we couldn't get access to your location. Check your browser settings and try again."
+const getErrorMessage = ({ message }) => {
+  if (message) {
+    if (message === 'User denied Geolocation') {
+      return "It looks like we couldn't get access to your location. Check your browser settings and try again."
+    }
+    return message
   }
-  return error.message
+  return 'Something went wrong'
 }
 
 export const icons = {
   default: 'images/cloud.svg',
-  Thunderstorm: 'images/lightning.svg',
+  Thunderstorm: 'images/cloud-lightning.svg',
   Drizzle: 'images/rain.svg',
   Rain: 'images/rain.svg',
   Snow: 'images/rain.svg',

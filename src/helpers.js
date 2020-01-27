@@ -51,7 +51,9 @@ const convertMPSToKMH = val => {
 }
 
 const formatWeatherData = data => ({
+  raw: data,
   icon: data.weather[0].icon,
+  description: data.weather[0].main,
   location: data.name,
   temp: {
     c: convertKelvinToCelsius(data.main.temp),
@@ -68,4 +70,14 @@ const getErrorMessage = error => {
     return "It looks like we couldn't get access to your location. Check your browser settings and try again."
   }
   return error.message
+}
+
+export const icons = {
+  default: 'images/cloud.svg',
+  Thunderstorm: 'images/lightning.svg',
+  Drizzle: 'images/rain.svg',
+  Rain: 'images/rain.svg',
+  Snow: 'images/rain.svg',
+  Clear: 'images/sunny.svg',
+  Clouds: 'images/cloud.svg',
 }

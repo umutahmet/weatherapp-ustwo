@@ -11,3 +11,7 @@ Build the project:
 Run it:
 `npm run start`
 
+## Node and npm version
+
+node: 10.16.3
+npm: 6.13.6
